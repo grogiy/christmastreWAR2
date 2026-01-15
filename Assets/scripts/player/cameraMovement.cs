@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class cameraMovement : MonoBehaviour
@@ -7,6 +8,9 @@ public class cameraMovement : MonoBehaviour
 
 	float xRotation;
 	float yRotation;
+	float currentX;
+	float currentY;
+	public float smoothSpeed;
 	public Transform Orientation;
 	
 	public playerMovement player;
@@ -15,6 +19,8 @@ public class cameraMovement : MonoBehaviour
 	{
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
+		currentX = xRotation;
+		currentY = yRotation;
 	}
 
 	// Update is called once per frame
@@ -32,15 +38,18 @@ public class cameraMovement : MonoBehaviour
 		xRotation -= mouseY;
 
 		xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+		
+		currentX = Mathf.Lerp(currentX, xRotation, smoothSpeed * Time.deltaTime);
+		currentY = Mathf.Lerp(currentY, yRotation, smoothSpeed * Time.deltaTime);
 
-		transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+		transform.rotation = Quaternion.Euler(currentX, currentY, 0);
 		
 		
 		if(!player.sliding)
 
-        {
-            Orientation.rotation = Quaternion.Euler(0, yRotation, 0);
-        }
+		{
+			Orientation.rotation = Quaternion.Euler(0, currentY, 0);
+		}
 	}
 	
 }
