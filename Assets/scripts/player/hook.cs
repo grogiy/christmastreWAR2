@@ -30,17 +30,6 @@ public class hook : MonoBehaviour
 	{
 		lr.SetPosition(1, hookTip.position);
 	}
-	//IEnumerator GroundCheck()
-
-	//{
-		//yield return new WaitForSeconds(1);
-		//if(plr.grounded)
-		
-		//{
-			//StopHook();
-		//}
-	//}
-	// Update is called once per frame
 	void Update()
 	{
 		if(Input.GetKeyDown(hookKey))

@@ -2,7 +2,12 @@ using UnityEngine;
 
 public class likeNextBots : MonoBehaviour
 {
-	public Camera mainCamera;
+	private Camera mainCamera;
+	void Start()
+
+	{
+		mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+	}
 	// Update is called once per frame
 	void LateUpdate()
 	{

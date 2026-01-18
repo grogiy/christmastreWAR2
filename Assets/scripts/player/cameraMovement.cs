@@ -1,55 +1,79 @@
 using System;
+using System.Collections;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class cameraMovement : MonoBehaviour
 {
-   public float sensX;
+	public float sensX;
 	public float sensY;
+	public float smoothSpeed;
 
 	float xRotation;
 	float yRotation;
 	float currentX;
 	float currentY;
-	public float smoothSpeed;
+
 	public Transform Orientation;
-	
 	public playerMovement player;
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
+
+	bool firstFrame = false;
+
 	void Start()
 	{
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
+
+		// Получаем реальные углы камеры на старте
+		Vector3 initialRot = transform.eulerAngles;
+		xRotation = initialRot.x;
+		yRotation = initialRot.y;
+
+		// На старте current = target
 		currentX = xRotation;
 		currentY = yRotation;
+
+		// Жёстко фиксируем камеру первый кадр
+		transform.rotation = Quaternion.Euler(currentX, currentY, 0f);
 	}
 
-	// Update is called once per frame
-	void Update()
-	{
-		
-	}
 	void LateUpdate()
-
 	{
-		float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
-		float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
+		float mouseX = Input.GetAxis("Mouse X") * sensX * Time.deltaTime;
+		float mouseY = Input.GetAxis("Mouse Y") * sensY * Time.deltaTime;
 
-		yRotation += mouseX;
-		xRotation -= mouseY;
+		if (Mathf.Abs(mouseY) < 0.001f) mouseY = 0f;
 
-		xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+		
+		if(!firstFrame)
+		{
+			mouseX = 0f;
+			mouseY = 0f;
+			StartCoroutine(waitASec());	
+		}else
+
+		{
+			xRotation -= mouseY;
+			yRotation += mouseX;
+		}
+		xRotation = Mathf.Clamp(xRotation, -80f, 80f);
+
+		// Первый кадр — сразу ставим rotation без Lerp
 		
 		currentX = Mathf.Lerp(currentX, xRotation, smoothSpeed * Time.deltaTime);
 		currentY = Mathf.Lerp(currentY, yRotation, smoothSpeed * Time.deltaTime);
-
-		transform.rotation = Quaternion.Euler(currentX, currentY, 0);
 		
-		
-		if(!player.sliding)
 
-		{
-			Orientation.rotation = Quaternion.Euler(0, currentY, 0);
-		}
+		transform.rotation = Quaternion.Euler(currentX, currentY, 0f);
+
+		if (!player.sliding)
+			Orientation.rotation = Quaternion.Euler(0f, currentY, 0f);
 	}
 	
+	IEnumerator waitASec()
+
+	{
+		yield return new WaitForSeconds(0.1f);
+		firstFrame = true;
+	}
 }
