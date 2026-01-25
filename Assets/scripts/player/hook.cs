@@ -57,6 +57,7 @@ public class hook : MonoBehaviour
 	{
 		if(forcing)
 		{ 
+			plr.moveSpeed = 7f;
 			direction = -(hookTip.position - hookPoint).normalized;
 			ExecuteHook();
 		}
@@ -109,6 +110,8 @@ public class hook : MonoBehaviour
 		hookCdTimer = hookCd;
 		
 		forcing = false;
+		
+		plr.moveSpeed = 14f;
 	}
 
 	public Vector3 GetHookPoint()
