@@ -25,6 +25,7 @@ public class hook : MonoBehaviour
 	public playerMovement plr;
 
 	public float animTime;
+	Vector3 direction;
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
 	{
@@ -49,12 +50,6 @@ public class hook : MonoBehaviour
 			hookCdTimer -= Time.deltaTime;
 		}
 		
-		if(hooking)
-
-		{
-			hookTip.LookAt(hookPoint);
-		}
-		
 		
 	}
 
@@ -62,6 +57,7 @@ public class hook : MonoBehaviour
 	{
 		if(forcing)
 		{ 
+			direction = -(hookTip.position - hookPoint).normalized;
 			ExecuteHook();
 		}
 	}
@@ -83,7 +79,7 @@ public class hook : MonoBehaviour
 		if(Physics.Raycast(cam.position, cam.forward, out hit, maxHookDistance, hookAble))
 
 		{
-			//StartCoroutine(GroundCheck());
+			
 			hookPoint = hit.point;
 			
 			forcing = true;
@@ -102,7 +98,7 @@ public class hook : MonoBehaviour
 
 	{
 		
-		rb.AddForce(hookTip.forward * hookForce * Time.deltaTime, ForceMode.VelocityChange);
+		rb.linearVelocity += (Time.time / Time.time) * hookForce * new Vector3(direction.x, direction.y, direction.z);
 		
 	}
 	private void StopHook()
