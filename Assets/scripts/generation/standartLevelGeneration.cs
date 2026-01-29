@@ -32,11 +32,13 @@ public class standartLevelGeneration : MonoBehaviour
 			{
 				
 				int nextTurningPart = Random.Range(0,turningLvlParts.Count);
-				if (turningLvlParts[nextTurningPart].tag == lastTurnTag)
-			{
-				// просто берём следующий по списку
-				nextTurningPart = (nextTurningPart + 1) % turningLvlParts.Count;
-			}
+				int attempts = 0;
+				int maxAttempts = 100;
+				while(turningLvlParts[nextTurningPart].tag == lastTurnTag && attempts < maxAttempts)
+				{
+					nextTurningPart = Random.Range(0,turningLvlParts.Count);
+					attempts++;
+				}
 				GameObject generatedTurn = Instantiate(turningLvlParts[nextTurningPart], continuePoint.position, continuePoint.rotation);
 				Transform nextContinue = generatedTurn.transform.Find("continue");
 				if(nextContinue != null)
@@ -45,6 +47,7 @@ public class standartLevelGeneration : MonoBehaviour
 					generatedParts.Add(generatedTurn);
 				}
 				lastTurnTag = generatedTurn.tag;
+				attempts = 0;
 			} else
 			{
 				int nextRegularPart = Random.Range(0, regularLvlParts.Count);

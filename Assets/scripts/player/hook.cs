@@ -84,6 +84,7 @@ public class hook : MonoBehaviour
 			hookPoint = hit.point;
 			
 			forcing = true;
+			//rb.linearVelocity = new Vector3(0, 0, 0);
 		} else
 
 		{
