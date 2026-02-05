@@ -6,60 +6,113 @@ public class standartLevelGeneration : MonoBehaviour
 	public List<GameObject> regularLvlParts;
 	public List<GameObject> turningLvlParts;
 	public List<GameObject> generatedParts;
+	List<Bounds> occupiedBounds = new List<Bounds>();
 	public int howManyParts;
+	public LayerMask partsMask;
 	Transform continuePoint;
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
+
 	void Start()
 	{
 		continuePoint = transform;
 		Generate();
 	}
 
-	// Update is called once per frame
-	void Update()
+	void Update() { }
+
+	// Проверка пересечения
+	bool CanPlace(Bounds newBounds)
 	{
-		
+		foreach (Bounds b in occupiedBounds)
+		{
+			if (b.Intersects(newBounds))
+				return false;
+		}
+		return true;
 	}
-	
+
 	private void Generate()
 	{
 		string lastTurnTag = "";
-		for(int madeParts = 0; madeParts < howManyParts; madeParts++)
-		{
-			bool placeTurn = Random.Range(0f, 1f) > 0.5f;
-			if(placeTurn && turningLvlParts.Count > 0)
 
+		for (int madeParts = 0; madeParts < howManyParts; madeParts++)
+		{
+			bool placeTurn = Random.value > 0.5f; // решаем: поворот или прямая
+			List<GameObject> partsList = placeTurn ? turningLvlParts : regularLvlParts;
+
+			int attempts = 0;
+			int maxAttempts = 100;
+
+			while (attempts < maxAttempts)
 			{
-				
-				int nextTurningPart = Random.Range(0,turningLvlParts.Count);
-				int attempts = 0;
-				int maxAttempts = 100;
-				while(turningLvlParts[nextTurningPart].tag == lastTurnTag && attempts < maxAttempts)
+				GameObject prefab = partsList[Random.Range(0, partsList.Count)];
+
+				// защита от одинаковых поворотов подряд
+				if (placeTurn && prefab.tag == lastTurnTag)
 				{
-					nextTurningPart = Random.Range(0,turningLvlParts.Count);
 					attempts++;
+					continue;
 				}
-				GameObject generatedTurn = Instantiate(turningLvlParts[nextTurningPart], continuePoint.position, continuePoint.rotation);
-				Transform nextContinue = generatedTurn.transform.Find("continue");
-				if(nextContinue != null)
+
+				// создаём временный объект
+				GameObject temp = Instantiate(prefab, continuePoint.position, continuePoint.rotation);
+
+				// берём реальные bounds после спавна
+				BoxCollider box = temp.GetComponentInChildren<BoxCollider>();
+				if (box == null)
 				{
-					continuePoint = nextContinue;
-					generatedParts.Add(generatedTurn);
+					Debug.LogError("No BoxCollider in prefab: " + prefab.name);
+					Destroy(temp);
+					attempts++;
+					continue;
 				}
-				lastTurnTag = generatedTurn.tag;
-				attempts = 0;
-			} else
+
+				Bounds newBounds = box.bounds;
+
+				// проверяем пересечение
+				if (CanPlace(newBounds))
+				{
+					// всё ок, оставляем объект
+					occupiedBounds.Add(newBounds);
+
+					Transform next = temp.transform.Find("continue");
+					if (next != null)
+						continuePoint = next;
+
+					generatedParts.Add(temp);
+
+					if (placeTurn)
+						lastTurnTag = prefab.tag;
+					else
+						lastTurnTag = "";
+
+					break; // нашли комнату, выходим из while
+				}
+				else
+				{
+					// пересеклось, удаляем объект
+					Destroy(temp);
+					attempts++;
+					if(attempts > 60 && generatedParts.Count > 0 && occupiedBounds.Count > 0)
+
+					{
+						Destroy(generatedParts[generatedParts.Count - 1]);
+						occupiedBounds.RemoveAt(occupiedBounds.Count - 1);
+					}
+				}
+			}
+
+			if (attempts >= maxAttempts)
 			{
-				int nextRegularPart = Random.Range(0, regularLvlParts.Count);
-				GameObject generatedPart = Instantiate(regularLvlParts[nextRegularPart], continuePoint.position, continuePoint.rotation);
-				Transform nextContinue = generatedPart.transform.Find("continue");
-				if(nextContinue != null)
-				{
-					continuePoint = nextContinue;
-					generatedParts.Add(generatedPart);
-				}
-				lastTurnTag = "";
+				Debug.LogWarning("Не удалось поставить комнату после " + maxAttempts + " попыток");
+				break;
 			}
 		}
+	}
+
+	void OnDrawGizmos()
+	{
+		Gizmos.color = Color.red;
+		foreach (Bounds b in occupiedBounds)
+			Gizmos.DrawWireCube(b.center, b.size);
 	}
 }

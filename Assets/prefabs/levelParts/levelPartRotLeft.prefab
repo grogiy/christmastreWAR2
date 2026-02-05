@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 757713011713595993}
-  m_Layer: 6
+  - component: {fileID: 890274983605338189}
+  m_Layer: 7
   m_Name: levelPartRotLeft
   m_TagString: rotLeft
   m_Icon: {fileID: 0}
@@ -34,6 +35,27 @@ Transform:
   - {fileID: 8805851608990726402}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!65 &890274983605338189
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3095184041370635437}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.2740035, y: 12.411436, z: 1.5931104}
+  m_Center: {x: -0.13700122, y: 2.276797, z: 0.87064224}
 --- !u!1 &3798131284962620125
 GameObject:
   m_ObjectHideFlags: 0

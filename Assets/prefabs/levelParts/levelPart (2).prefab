@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4085945913898009233}
-  m_Layer: 6
+  - component: {fileID: 1123578262910570188}
+  m_Layer: 7
   m_Name: levelPart (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,6 +34,27 @@ Transform:
   - {fileID: 5076987621024617080}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!65 &1123578262910570188
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3783008595571774225}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 15.296683, z: 0.95979935}
+  m_Center: {x: 1.699644e-14, y: 2.0714686, z: 0.5293956}
 --- !u!1 &6557152265094359531
 GameObject:
   m_ObjectHideFlags: 0

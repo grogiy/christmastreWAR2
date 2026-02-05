@@ -1543,6 +1543,9 @@ MonoBehaviour:
   - {fileID: 3095184041370635437, guid: 6ba530df723041b409af01da1d36778c, type: 3}
   generatedParts: []
   howManyParts: 100
+  partsMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!4 &1339110036 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -5913172463669914825, guid: cbcca6ce0ab59c944b901eed99b0ac07, type: 3}
