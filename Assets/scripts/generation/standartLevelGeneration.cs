@@ -6,7 +6,7 @@ public class standartLevelGeneration : MonoBehaviour
 	public List<GameObject> regularLvlParts;
 	public List<GameObject> turningLvlParts;
 	public List<GameObject> generatedParts;
-	List<Bounds> occupiedBounds = new List<Bounds>();
+	public List<Bounds> occupiedBounds = new List<Bounds>();
 	public int howManyParts;
 	public LayerMask partsMask;
 	Transform continuePoint;
@@ -95,8 +95,11 @@ public class standartLevelGeneration : MonoBehaviour
 					if(attempts > 60 && generatedParts.Count > 0 && occupiedBounds.Count > 0)
 
 					{
+						continuePoint = generatedParts[generatedParts.Count - 2].transform.Find("continue");
 						Destroy(generatedParts[generatedParts.Count - 1]);
+						generatedParts.RemoveAt(generatedParts.Count - 1);
 						occupiedBounds.RemoveAt(occupiedBounds.Count - 1);
+						Debug.LogWarning("Не удалось поставить комнату после 60 попыток");
 					}
 				}
 			}

@@ -20,7 +20,7 @@ public class girlScript : MonoBehaviour
 		cam = GameObject.Find("Main Camera").GetComponent<Camera>();
 		
 	}
-	void Update()
+	void FixedUpdate()
 
 	{
 		girl.transform.position = Vector3.MoveTowards(girl.transform.position, target, moveSpeed * Time.deltaTime);
