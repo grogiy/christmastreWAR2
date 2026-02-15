@@ -90,11 +90,12 @@ public class eyeScript : MonoBehaviour
 	IEnumerator spawnNew()
 
 	{
-		Vector3 distance = new Vector3(Random.Range(orientation.position.x + 5f, orientation.position.x + -5f), Random.Range(orientation.position.y + 5f, orientation.position.y + -5f), Random.Range(orientation.position.z + 5f, orientation.position.z + 10f));
 		yield return new WaitForSeconds(1.1f);
 		Destroy(oldEye);
+		Vector3 distance = orientation.position + orientation.forward * Random.Range(25f, 30f);
 		Vector3 spawnPos = distance;
 		GameObject clone = Instantiate(newEye, spawnPos, oldEye.transform.rotation);
+		clone.transform.position = new Vector3(clone.transform.position.x + Random.Range(-5f, 5f), clone.transform.position.y + Random.Range(-1f, 5f), clone.transform.position.z);
 		eyeScript es = clone.GetComponentInChildren<eyeScript>();
 		if(es != null) es.enabled = true;
 		likeNextBots lnb = clone.GetComponentInChildren<likeNextBots>();

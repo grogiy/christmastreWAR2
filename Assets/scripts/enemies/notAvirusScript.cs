@@ -11,6 +11,7 @@ public class notAvirusScript : MonoBehaviour
 	public Transform virus; 
 	Vector3 target;
 	public float distance;
+	public float keepDis;
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
 	{
@@ -28,7 +29,7 @@ public class notAvirusScript : MonoBehaviour
 
 		{
 			target = plr.transform.position;
-			speed = distance - 3f;
+			speed = (distance * 3f) - keepDis;
 			//virus.transform.parent = plr.transform;
 		}
 		virus.position = Vector3.MoveTowards(virus.position, target, speed * Time.deltaTime);	
