@@ -21,7 +21,7 @@ public class eyeScript : MonoBehaviour
 	{
 		
 		Invoke(nameof(Attracting), 1.1f);
-		Invoke(nameof(Stopping), 6.1f);
+		Invoke(nameof(Stopping), Random.Range(6.1f, 11.1f));
 		plr = GameObject.Find("player").transform;
 		playerRb = plr.GetComponent<Rigidbody>();
 		playerMovement = plr.GetComponent<playerMovement>();
