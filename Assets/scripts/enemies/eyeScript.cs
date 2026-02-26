@@ -85,7 +85,7 @@ public class eyeScript : MonoBehaviour
 		attract = false;
 		animator.SetTrigger("eyeStop");
 		StartCoroutine(spawnNew());
-		playerMovement.moveSpeed = 14;
+		playerMovement.moveSpeed = 10f;
 	}
 	IEnumerator spawnNew()
 

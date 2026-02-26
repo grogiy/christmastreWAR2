@@ -19,6 +19,7 @@ public class hook : MonoBehaviour
 	public float hookForce;
 	private bool forcing;
 	
+	
 	public Transform hookObj;
 	private Vector3 currentHookingPoint;
 	
@@ -112,7 +113,7 @@ public class hook : MonoBehaviour
 		
 		forcing = false;
 		
-		plr.moveSpeed = 14f;
+		plr.moveSpeed = 10f;
 	}
 
 	public Vector3 GetHookPoint()

@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Unity.Mathematics;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -170,8 +171,14 @@ public class playerMovement : MonoBehaviour
 	public void Slide()
 
 	{
+		float vertVel = rb.linearVelocity.y;
+		if(vertVel < 0f)
+
+		{
+			vertVel = -vertVel;
+		}
 		playerObj.transform.localScale = new Vector3(playerObj.transform.localScale.x, 0.62395f, playerObj.transform.localScale.z);
-		rb.AddForce(orientation.forward * slideForce, ForceMode.Impulse);
+		rb.AddForce(orientation.forward * (slideForce + vertVel), ForceMode.Impulse);
 	}
 	
 	public void Punch()
