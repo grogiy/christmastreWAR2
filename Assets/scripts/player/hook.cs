@@ -78,7 +78,7 @@ public class hook : MonoBehaviour
 		
 		RaycastHit hit;
 		
-		if(Physics.Raycast(cam.position, cam.forward, out hit, maxHookDistance, hookAble))
+		if(Physics.Raycast(cam.position, cam.forward + Vector3.up * 0.1f, out hit, maxHookDistance, hookAble))
 
 		{
 			
