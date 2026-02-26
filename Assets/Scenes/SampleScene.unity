@@ -1680,7 +1680,7 @@ MonoBehaviour:
   hookDelayTime: 0.25
   hookCd: 0.4
   hookCdTimer: 0
-  hookKey: 114
+  hookKey: 324
   hooking: 0
   lr: {fileID: 1468862861}
   rb: {fileID: 1038136738}
