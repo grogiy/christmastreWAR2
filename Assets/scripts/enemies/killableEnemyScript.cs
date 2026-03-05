@@ -24,7 +24,9 @@ public class EnemyPatrol : MonoBehaviour
 	public float bulletSpeed;
 	float gunCd;
 	public float maxGunCd;
-	
+	public float jumpForce;
+	public playerMovement plrMove;
+	bool jump;
 
 	void Start()
 	{
@@ -34,6 +36,7 @@ public class EnemyPatrol : MonoBehaviour
 		currentPoint = pointB;
 		//anim.SetBool("isRunning", true);
 		Player = GameObject.Find("player").transform;
+		plrMove = Player.GetComponent<playerMovement>();
 	}
 
 	void FixedUpdate()
@@ -65,6 +68,7 @@ public class EnemyPatrol : MonoBehaviour
 		}else
 
 		{
+			if(!jump)
 			orientation.LookAt(Player.position);
 			//Vector3 Direction = new Vector3.LookAt(Player.position);
 			//Instantiate(bullet, orientation.position, orientation.rotation);
@@ -84,5 +88,13 @@ public class EnemyPatrol : MonoBehaviour
 			gunCd = maxGunCd;
 		}
 	}
-	
+	private void OnCollisionEnter(Collision collision)
+	{
+		if(collision.gameObject.CompareTag("Player") && plrMove.groundSlide)
+
+		{
+			jump = true;
+			rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+		}
+	}
 }

@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 using Unity.Mathematics;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class playerMovement : MonoBehaviour
@@ -43,7 +43,7 @@ public class playerMovement : MonoBehaviour
   
   float Horizontal;
   float Vertical;
-  
+  public bool groundSlide;
   void Start()
 
 	{
@@ -116,6 +116,7 @@ public class playerMovement : MonoBehaviour
 			wasOnGround = false;
 			sliding = false;
 			playerObj.transform.localScale = new Vector3(playerObj.transform.localScale.x, 1f, playerObj.transform.localScale.z);
+			groundSlide = false;
 		}
 		
 		if(Input.GetKeyDown(punchKey))
@@ -171,14 +172,32 @@ public class playerMovement : MonoBehaviour
 	public void Slide()
 
 	{
+		bool goDown = true;
 		float vertVel = rb.linearVelocity.y;
 		if(vertVel < 0f)
 
 		{
 			vertVel = -vertVel;
 		}
-		playerObj.transform.localScale = new Vector3(playerObj.transform.localScale.x, 0.62395f, playerObj.transform.localScale.z);
-		rb.AddForce(orientation.forward * (slideForce + vertVel), ForceMode.Impulse);
+		if(grounded)
+
+		{
+			groundSlide = true;
+			playerObj.transform.localScale = new Vector3(playerObj.transform.localScale.x, 0.62395f, playerObj.transform.localScale.z);
+			rb.AddForce(orientation.forward * (35f + vertVel), ForceMode.Impulse);
+			if(goDown)
+
+			{
+				rb.AddForce(-orientation.up * slideForce, ForceMode.Impulse);
+				goDown = false;
+			}
+		}else
+
+		{
+			playerObj.transform.localScale = new Vector3(playerObj.transform.localScale.x, 0.62395f, playerObj.transform.localScale.z);
+			rb.AddForce(orientation.forward * (slideForce + vertVel), ForceMode.Impulse);
+		}
+		
 	}
 	
 	public void Punch()
