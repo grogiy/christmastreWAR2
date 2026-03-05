@@ -26,7 +26,9 @@ public class EnemyPatrol : MonoBehaviour
 	public float maxGunCd;
 	public float jumpForce;
 	public playerMovement plrMove;
-	bool jump;
+	public bool jump;
+	float posX;
+	float posZ;
 
 	void Start()
 	{
@@ -44,7 +46,14 @@ public class EnemyPatrol : MonoBehaviour
 		grounded = Physics.Raycast(transform.position, Vector3.down,
 		playerHeight * 0.5f + 0.2f, whatIsGround);
 		plrDis = Vector3.Distance(transform.position, Player.position) <= 10f;
+		if(jump)
 
+			{
+				transform.position = new Vector3(posX, transform.position.y, posZ);
+				//rb.useGravity = false;
+				//transform.Translate(Vector3.up * jumpForce);
+				//Debug.Log("работает");
+			}
 	if (!grounded) return;
 		
 		if(!plrDis)
@@ -52,7 +61,9 @@ public class EnemyPatrol : MonoBehaviour
 			orientation.LookAt(currentPoint.position);
 
 			Vector3 moveDir = orientation.forward * speed;
+			//rb.useGravity = true;
 			rb.linearVelocity = new Vector3(moveDir.x, rb.linearVelocity.y, moveDir.z);
+			
 
 			if (Vector3.Distance(transform.position, pointB.position) < 0.5f &&
 				currentPoint == pointB)
@@ -93,8 +104,21 @@ public class EnemyPatrol : MonoBehaviour
 		if(collision.gameObject.CompareTag("Player") && plrMove.groundSlide)
 
 		{
+			
 			jump = true;
+			posX = transform.position.x;
+			posZ = transform.position.z;
+			//rb.constraints = RigidbodyConstraints.FreezePositionX;
+			//rb.constraints = RigidbodyConstraints.FreezePositionZ;
 			rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+			Debug.Log("jump = " + jump);
+		}else
+
+		{
+			//rb.constraints &= ~RigidbodyConstraints.FreezePositionX;
+			//rb.constraints &= ~RigidbodyConstraints.FreezePositionZ;
+			jump = false;
+			Debug.Log("jump = " + jump);
 		}
 	}
 }
