@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acbe035d973428d4f98ed61ac98e81a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  force: 0.4
+  force: 0.2
   attract: 0
   animator: {fileID: 2205599258455126696}
   collide: {fileID: 1601396875720748948}

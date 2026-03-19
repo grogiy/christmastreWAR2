@@ -29,6 +29,8 @@ public class EnemyPatrol : MonoBehaviour
 	public bool jump;
 	float posX;
 	float posZ;
+	public CapsuleCollider caps;
+	float airTime = 1;
 
 	void Start()
 	{
@@ -36,23 +38,32 @@ public class EnemyPatrol : MonoBehaviour
 		anim = GetComponent<Animator>();
 
 		currentPoint = pointB;
-		//anim.SetBool("isRunning", true);
 		Player = GameObject.Find("player").transform;
 		plrMove = Player.GetComponent<playerMovement>();
 	}
 
 	void FixedUpdate()
 	{
+		transform.localScale =new Vector3(1, 1, 1);
 		grounded = Physics.Raycast(transform.position, Vector3.down,
 		playerHeight * 0.5f + 0.2f, whatIsGround);
 		plrDis = Vector3.Distance(transform.position, Player.position) <= 10f;
 		if(jump)
-
 			{
-				transform.position = new Vector3(posX, transform.position.y, posZ);
-				//rb.useGravity = false;
-				//transform.Translate(Vector3.up * jumpForce);
-				//Debug.Log("работает");
+				rb.position = new Vector3(posX, transform.position.y, posZ);
+				rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+				airTime -= Time.deltaTime;
+				if(grounded && airTime <= 0f)
+				{
+					jump = false;
+					Debug.Log("jump = " + jump);
+					caps.isTrigger = false;
+				}
+				if(rb.linearVelocity.y > jumpForce)
+
+				{
+					rb.linearVelocity = new Vector3(0f, jumpForce, 0f);	
+				}
 			}
 	if (!grounded) return;
 		
@@ -61,7 +72,6 @@ public class EnemyPatrol : MonoBehaviour
 			orientation.LookAt(currentPoint.position);
 
 			Vector3 moveDir = orientation.forward * speed;
-			//rb.useGravity = true;
 			rb.linearVelocity = new Vector3(moveDir.x, rb.linearVelocity.y, moveDir.z);
 			
 
@@ -81,8 +91,6 @@ public class EnemyPatrol : MonoBehaviour
 		{
 			if(!jump)
 			orientation.LookAt(Player.position);
-			//Vector3 Direction = new Vector3.LookAt(Player.position);
-			//Instantiate(bullet, orientation.position, orientation.rotation);
 			Shoot();
 		}
 	}
@@ -99,26 +107,20 @@ public class EnemyPatrol : MonoBehaviour
 			gunCd = maxGunCd;
 		}
 	}
-	private void OnCollisionEnter(Collision collision)
+	private void OnCollisionEnter(Collision other)
 	{
-		if(collision.gameObject.CompareTag("Player") && plrMove.groundSlide)
+		if(other.gameObject.CompareTag("Player") && plrMove.groundSlide && !jump)
 
 		{
-			
+			airTime = 1f;
 			jump = true;
 			posX = transform.position.x;
 			posZ = transform.position.z;
-			//rb.constraints = RigidbodyConstraints.FreezePositionX;
-			//rb.constraints = RigidbodyConstraints.FreezePositionZ;
 			rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+			Rigidbody plrRb = Player.GetComponent<Rigidbody>();
+			plrRb.linearVelocity = new Vector3(plrRb.linearVelocity.x, 0f, plrRb.linearVelocity.z);
 			Debug.Log("jump = " + jump);
-		}else
-
-		{
-			//rb.constraints &= ~RigidbodyConstraints.FreezePositionX;
-			//rb.constraints &= ~RigidbodyConstraints.FreezePositionZ;
-			jump = false;
-			Debug.Log("jump = " + jump);
+			caps.isTrigger = true;
 		}
 	}
-}
+	}

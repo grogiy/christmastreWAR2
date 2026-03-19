@@ -17,8 +17,9 @@ public class enemySpawn : MonoBehaviour
 		spawnPoint = transform.Find("spawnPoint");
 		GameObject enemyIndex;
 		enemyIndex = enemies[Random.Range(0, enemies.Count)];
-		clone = Instantiate(enemyIndex, spawnPoint.position, transform.rotation);
-		clone.transform.parent = transform;
+		clone = Instantiate(enemyIndex, spawnPoint.position, Quaternion.identity);
+		//clone.transform.parent = transform;
+		//clone.transform.SetParent(transform, false)
 		kes = clone.GetComponent<EnemyPatrol>();
 		kes.pointA = pointA;
 		kes.pointB = pointB;

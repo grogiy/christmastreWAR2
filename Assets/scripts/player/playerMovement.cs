@@ -53,6 +53,11 @@ public class playerMovement : MonoBehaviour
 	void Update()
 
 	{
+		if(grounded && sliding)
+
+		{
+			groundSlide = true;
+		}
 		grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 		
 		if (grounded && !sliding && !hook.hooking || hook.hooking && grounded)
@@ -86,6 +91,7 @@ public class playerMovement : MonoBehaviour
 	void FixedUpdate()
 	{
 		MovePlayer();
+		
 	}
 	private void MyInput()
 
@@ -182,7 +188,6 @@ public class playerMovement : MonoBehaviour
 		if(grounded)
 
 		{
-			groundSlide = true;
 			playerObj.transform.localScale = new Vector3(playerObj.transform.localScale.x, 0.62395f, playerObj.transform.localScale.z);
 			rb.AddForce(orientation.forward * (35f + vertVel), ForceMode.Impulse);
 			if(goDown)
