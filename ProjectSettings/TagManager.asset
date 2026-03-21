@@ -8,6 +8,7 @@ TagManager:
   - rotLeft
   - enemyHead
   - enemyTorso
+  - enemy
   layers:
   - Default
   - TransparentFX

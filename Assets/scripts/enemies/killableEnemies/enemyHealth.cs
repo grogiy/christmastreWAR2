@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class enemyHealth : MonoBehaviour
@@ -16,8 +17,10 @@ public class enemyHealth : MonoBehaviour
 		if(enemyHp <= 0)
 
 		{
+			enemy.caps.isTrigger = false;
 			rb.freezeRotation = false;
 			enemy.enabled = false;
+			enemy.dead = true;
 			//Destroy(gameObject);
 		}
 	}

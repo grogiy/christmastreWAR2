@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 6003925707635074842}
   - component: {fileID: 8612130722883865203}
   - component: {fileID: 3638002710222531858}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: obj
-  m_TagString: Player
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 3085961530171968920}
   m_Layer: 0
   m_Name: enemy1
-  m_TagString: Untagged
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -177,6 +177,7 @@ MonoBehaviour:
   jumpForce: 10
   plrMove: {fileID: 0}
   jump: 0
+  dead: 0
   caps: {fileID: 3638002710222531858}
 --- !u!95 &6633569932500992197
 Animator:
@@ -305,7 +306,7 @@ GameObject:
   - component: {fileID: 2636367030033158186}
   m_Layer: 0
   m_Name: orientation
-  m_TagString: Untagged
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

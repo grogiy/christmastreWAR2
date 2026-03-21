@@ -27,6 +27,7 @@ public class EnemyPatrol : MonoBehaviour
 	public float jumpForce;
 	public playerMovement plrMove;
 	public bool jump;
+	public bool dead;
 	float posX;
 	float posZ;
 	public CapsuleCollider caps;
@@ -109,7 +110,7 @@ public class EnemyPatrol : MonoBehaviour
 	}
 	private void OnCollisionEnter(Collision other)
 	{
-		if(other.gameObject.CompareTag("Player") && plrMove.groundSlide && !jump)
+		if(other.gameObject.CompareTag("Player") && plrMove.groundSlide && !jump && !dead)
 
 		{
 			airTime = 1f;

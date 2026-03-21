@@ -18,7 +18,8 @@ public class hook : MonoBehaviour
 	public Rigidbody rb;
 	public float hookForce;
 	private bool forcing;
-	
+	bool enemy;
+	Transform enemyPos;
 	
 	public Transform hookObj;
 	private Vector3 currentHookingPoint;
@@ -50,7 +51,11 @@ public class hook : MonoBehaviour
 		{
 			hookCdTimer -= Time.deltaTime;
 		}
-		
+		if(enemy)
+
+		{
+			hookPoint = enemyPos.position;
+		}
 		
 	}
 
@@ -62,6 +67,7 @@ public class hook : MonoBehaviour
 			direction = -(hookTip.position - hookPoint).normalized;
 			ExecuteHook();
 		}
+		
 	}
 
 	private void LateUpdate()
@@ -82,10 +88,20 @@ public class hook : MonoBehaviour
 		if(Physics.Raycast(/*cam.position, cam.forward + Vector3.up * 0.1f*/ray, out hit, maxHookDistance, hookAble))
 
 		{
+			if(hit.transform.tag == "enemy")
+
+			{
+				enemyPos = hit.transform;
+				enemy = true;
+				forcing = true;
+			} else
+
+			{
+				hookPoint = hit.point;
 			
-			hookPoint = hit.point;
-			
-			forcing = true;
+				forcing = true;
+				Debug.Log(hit.transform.tag);
+			}
 			//rb.linearVelocity = new Vector3(0, 0, 0);
 		} else
 
@@ -115,6 +131,7 @@ public class hook : MonoBehaviour
 		forcing = false;
 		
 		plr.moveSpeed = 10f;
+		enemy = false;
 	}
 
 	public Vector3 GetHookPoint()

@@ -2576,7 +2576,8 @@ GameObject:
   m_Component:
   - component: {fileID: 978852053}
   - component: {fileID: 978852054}
-  m_Layer: 6
+  - component: {fileID: 978852055}
+  m_Layer: 7
   m_Name: continue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2623,6 +2624,27 @@ MonoBehaviour:
   partsMask:
     serializedVersion: 2
     m_Bits: 128
+--- !u!65 &978852055
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978852052}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 13.142195, z: 0.99897355}
+  m_Center: {x: 0.000000020362158, y: 1.700804, z: -0.50057644}
 --- !u!4 &988228602 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -5913172463669914825, guid: c55a694228178654589b0db05a804f2c, type: 3}
