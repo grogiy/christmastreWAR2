@@ -119,6 +119,7 @@ public class hook : MonoBehaviour
 				forcing = false;
 				brainColl = hit.transform.GetComponent<BoxCollider>();
 				brainRb = hit.transform.GetComponent<Rigidbody>();
+				brainRb.linearVelocity = new Vector3(0, 0, 0);
 				brainRb.useGravity = false;
 				brainColl.isTrigger = true;
 			}

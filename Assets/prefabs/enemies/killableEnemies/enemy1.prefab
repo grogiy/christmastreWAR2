@@ -215,6 +215,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyHp: 3
   enemy: {fileID: 1894797200939325537}
+  brain: {fileID: 629722120162392158, guid: 5a754787ac658754caf78b30f0f874cc, type: 3}
+  headPos: {fileID: 5590154517058100050}
+  brainForce: 5
 --- !u!54 &3085961530171968920
 Rigidbody:
   m_ObjectHideFlags: 0
