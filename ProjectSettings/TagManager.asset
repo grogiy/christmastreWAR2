@@ -9,6 +9,7 @@ TagManager:
   - enemyHead
   - enemyTorso
   - enemy
+  - brain
   layers:
   - Default
   - TransparentFX

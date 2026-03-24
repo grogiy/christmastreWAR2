@@ -19,7 +19,11 @@ public class hook : MonoBehaviour
 	public float hookForce;
 	private bool forcing;
 	bool enemy;
+	bool brain;
+	BoxCollider brainColl;
+	Rigidbody brainRb;
 	Transform enemyPos;
+	Transform target;
 	
 	public Transform hookObj;
 	private Vector3 currentHookingPoint;
@@ -51,12 +55,16 @@ public class hook : MonoBehaviour
 		{
 			hookCdTimer -= Time.deltaTime;
 		}
-		if(enemy)
+		if(enemy || brain)
 
 		{
 			hookPoint = enemyPos.position;
 		}
-		
+		if(brain)
+
+		{
+			enemyPos.position = Vector3.MoveTowards(enemyPos.position, target.position, hookForce * Time.deltaTime * 15f);
+		}
 	}
 
 	void FixedUpdate()
@@ -102,6 +110,18 @@ public class hook : MonoBehaviour
 				forcing = true;
 				Debug.Log(hit.transform.tag);
 			}
+			if(hit.transform.tag == "brain")
+
+			{
+				brain = true;
+				enemyPos = hit.transform;
+				target = transform;
+				forcing = false;
+				brainColl = hit.transform.GetComponent<BoxCollider>();
+				brainRb = hit.transform.GetComponent<Rigidbody>();
+				brainRb.useGravity = false;
+				brainColl.isTrigger = true;
+			}
 			//rb.linearVelocity = new Vector3(0, 0, 0);
 		} else
 
@@ -121,7 +141,7 @@ public class hook : MonoBehaviour
 		rb.linearVelocity += (Time.time / Time.time) * hookForce * new Vector3(direction.x, direction.y, direction.z);
 		
 	}
-	private void StopHook()
+	public void StopHook()
 
 	{
 		hooking = false;
@@ -130,8 +150,19 @@ public class hook : MonoBehaviour
 		
 		forcing = false;
 		
+		target = null;
+		
 		plr.moveSpeed = 10f;
 		enemy = false;
+		brain = false;
+		if(brainColl != null && brainRb != null)
+
+		{
+			brainColl.isTrigger = false;
+			brainRb.useGravity = true;
+			brainColl = null;
+			brainRb = null;
+		}
 	}
 
 	public Vector3 GetHookPoint()
