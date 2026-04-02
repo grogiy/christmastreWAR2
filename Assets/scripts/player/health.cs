@@ -7,7 +7,7 @@ public class health : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		hp.value -= Time.deltaTime;
+		hp.value -= Time.deltaTime * 2f;
 	}
 	public void heal(float heal)
 

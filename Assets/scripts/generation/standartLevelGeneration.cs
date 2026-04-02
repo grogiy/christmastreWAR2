@@ -10,6 +10,8 @@ public class standartLevelGeneration : MonoBehaviour
 	public int howManyParts;
 	public LayerMask partsMask;
 	Transform continuePoint;
+	public GameObject elevator;
+	GameObject prefab;
 
 	void Start()
 	{
@@ -36,6 +38,7 @@ public class standartLevelGeneration : MonoBehaviour
 
 		for (int madeParts = 0; madeParts < howManyParts; madeParts++)
 		{
+			bool isLast = madeParts == howManyParts - 1;
 			bool placeTurn = Random.value > 0.5f; // решаем: поворот или прямая
 			List<GameObject> partsList = placeTurn ? turningLvlParts : regularLvlParts;
 
@@ -44,7 +47,16 @@ public class standartLevelGeneration : MonoBehaviour
 
 			while (attempts < maxAttempts)
 			{
-				GameObject prefab = partsList[Random.Range(0, partsList.Count)];
+
+				if (isLast)
+				{
+					prefab = elevator;
+				}
+				else
+				{
+					prefab = partsList[Random.Range(0, partsList.Count)];
+				}
+				 
 
 				// защита от одинаковых поворотов подряд
 				if (placeTurn && prefab.tag == lastTurnTag)
@@ -52,7 +64,7 @@ public class standartLevelGeneration : MonoBehaviour
 					attempts++;
 					continue;
 				}
-
+				 
 				// создаём временный объект
 				GameObject temp = Instantiate(prefab, continuePoint.position, continuePoint.rotation);
 
@@ -69,14 +81,20 @@ public class standartLevelGeneration : MonoBehaviour
 				Bounds newBounds = box.bounds;
 
 				// проверяем пересечение
-				if (CanPlace(newBounds))
+				if(isLast || CanPlace(newBounds))
 				{
 					// всё ок, оставляем объект
 					occupiedBounds.Add(newBounds);
 
 					Transform next = temp.transform.Find("continue");
 					if (next != null)
+					{
 						continuePoint = next;
+					}
+					else if (!isLast)
+					{
+						Debug.LogError("У части нет continue: " + temp.name);
+					}
 
 					generatedParts.Add(temp);
 
@@ -107,6 +125,7 @@ public class standartLevelGeneration : MonoBehaviour
 			if (attempts >= maxAttempts)
 			{
 				Debug.LogWarning("Не удалось поставить комнату после " + maxAttempts + " попыток");
+				Debug.Log(madeParts);
 				break;
 			}
 		}

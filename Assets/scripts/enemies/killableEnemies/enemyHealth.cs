@@ -28,7 +28,6 @@ public class enemyHealth : MonoBehaviour
 			enemy.enabled = false;
 			enemy.dead = true;
 			GameObject brainNew = Instantiate(brain, headPos.position, headPos.rotation);
-			brainNew.transform.LookAt(plr.position);
 			Rigidbody brainRb = brainNew.GetComponent<Rigidbody>();
 			brainRb.AddForce(Vector3.up * brainForce, ForceMode.Impulse);
 			dead = true;
