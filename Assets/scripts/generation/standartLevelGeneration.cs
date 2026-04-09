@@ -87,6 +87,7 @@ public class standartLevelGeneration : MonoBehaviour
 				{
 					// всё ок, оставляем объект
 					occupiedBounds.Add(newBounds);
+					temp.GetComponent<BoxCollider>().enabled = false;
 
 					Transform next = temp.transform.Find("continue");
 					if (next != null)

@@ -56,7 +56,7 @@ public class classicGun : MonoBehaviour
 		Vector3 direction = cam.transform.forward + new Vector3(x, y, 0);
 		Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 		cd = maxCd;
-		if(Physics.Raycast(cam.transform.position, direction, out hit, range, enemyLayer))
+		if(Physics.Raycast(cam.transform.position, direction, out hit, range))
 
 		{
 			if(hit.collider.CompareTag("enemyHead"))
@@ -77,11 +77,19 @@ public class classicGun : MonoBehaviour
 			lr.SetPosition(0, shootPos.position);
 			lr.SetPosition(1, hit.point);
 			lr.startWidth = 0.25f;
-		lr.endWidth = 0.25f;
+			lr.endWidth = 0.25f;
+		}else
+
+		{
+			lr.enabled = true;
+			lr.SetPosition(0, shootPos.position);
+			lr.SetPosition(1, cam.transform.position + cam.transform.forward * range);
+			lr.startWidth = 0.25f;
+			lr.endWidth = 0.25f;
 		}
 	}
-    void LateUpdate()
-    {
-        
-    }
+	void LateUpdate()
+	{
+		
+	}
 }

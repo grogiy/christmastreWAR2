@@ -36,6 +36,10 @@ public class playerMovement : MonoBehaviour
   public Transform orientation;
   public GameObject playerObj;
   
+  public float maxSlopeAngle;
+  private RaycastHit slopeHit;
+  bool exitSlope;
+  
   Vector3 MoveDirection;
   
   Vector3 slideDirection;
@@ -135,6 +139,16 @@ public class playerMovement : MonoBehaviour
 	private void MovePlayer()
 
 	{
+		if(OnSlope() && !sliding && !exitSlope)
+
+		{
+			rb.AddForce(GetSlopeDir() * moveSpeed * 20f, ForceMode.Force);
+			if(rb.linearVelocity.y > 0f)
+
+			{
+				rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+			}
+		}
 		MoveDirection = orientation.forward * Vertical + orientation.right * Horizontal;
 		if (grounded && !sliding)
 
@@ -145,25 +159,38 @@ public class playerMovement : MonoBehaviour
 		{
 			rb.AddForce(MoveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 		}
-		
+		rb.useGravity = !OnSlope();
 	}
 	
 	private void SpeedControl()
 
 	{
-		Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-		
-		if(flatVel.magnitude > moveSpeed && !sliding && !hook.hooking && grounded)
+		if(OnSlope() && !exitSlope)
 
 		{
-			Vector3 limitedVel = flatVel.normalized * moveSpeed;
-			rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+			if(rb.linearVelocity.magnitude > moveSpeed)
+
+			{
+				rb.linearVelocity = rb.linearVelocity.normalized * moveSpeed;
+			}
+		}else
+		{
+		
+			Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+		
+			if(flatVel.magnitude > moveSpeed && !sliding && !hook.hooking && grounded)
+
+			{
+				Vector3 limitedVel = flatVel.normalized * moveSpeed;
+				rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+			}
 		}
 	}
 	
 	private void Jump()
 
 	{
+		exitSlope = true;
 		rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 		
 		rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -172,7 +199,24 @@ public class playerMovement : MonoBehaviour
 	public void ResetJump()
 
 	{
+		exitSlope = false;
 		readyToJump = true;
+	}
+	private bool OnSlope()
+
+	{
+		if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+
+		{
+			float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+			return angle < maxSlopeAngle && angle != 0;
+		}
+		return false;
+	}
+	private Vector3 GetSlopeDir()
+
+	{
+		return Vector3.ProjectOnPlane(MoveDirection, slopeHit.normal).normalized;
 	}
 	
 	public void Slide()
@@ -188,13 +232,21 @@ public class playerMovement : MonoBehaviour
 		if(grounded)
 
 		{
-			playerObj.transform.localScale = new Vector3(playerObj.transform.localScale.x, 0.62395f, playerObj.transform.localScale.z);
-			rb.AddForce(orientation.forward * (35f + vertVel), ForceMode.Impulse);
-			if(goDown)
+			if(OnSlope())
 
 			{
-				rb.AddForce(-orientation.up * slideForce, ForceMode.Impulse);
-				goDown = false;
+				playerObj.transform.localScale = new Vector3(playerObj.transform.localScale.x, 0.62395f, playerObj.transform.localScale.z);
+				rb.AddForce(orientation.forward + GetSlopeDir() * (35f + vertVel), ForceMode.Impulse);
+			}else
+			{
+				playerObj.transform.localScale = new Vector3(playerObj.transform.localScale.x, 0.62395f, playerObj.transform.localScale.z);
+				rb.AddForce(orientation.forward * (35f + vertVel), ForceMode.Impulse);
+				if(goDown)
+
+				{
+					rb.AddForce(-orientation.up * slideForce, ForceMode.Impulse);
+					goDown = false;
+				}
 			}
 		}else
 
@@ -202,6 +254,7 @@ public class playerMovement : MonoBehaviour
 			playerObj.transform.localScale = new Vector3(playerObj.transform.localScale.x, 0.62395f, playerObj.transform.localScale.z);
 			rb.AddForce(orientation.forward * (slideForce + vertVel), ForceMode.Impulse);
 		}
+		
 		
 	}
 	
