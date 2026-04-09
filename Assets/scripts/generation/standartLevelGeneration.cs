@@ -12,6 +12,8 @@ public class standartLevelGeneration : MonoBehaviour
 	Transform continuePoint;
 	public GameObject elevator;
 	GameObject prefab;
+	public string enemyTag;
+	public string brainTag;
 
 	void Start()
 	{
@@ -32,7 +34,7 @@ public class standartLevelGeneration : MonoBehaviour
 		return true;
 	}
 
-	private void Generate()
+	public void Generate()
 	{
 		string lastTurnTag = "";
 
@@ -96,7 +98,18 @@ public class standartLevelGeneration : MonoBehaviour
 						Debug.LogError("У части нет continue: " + temp.name);
 					}
 
-					generatedParts.Add(temp);
+					if(!isLast)
+
+					{
+						generatedParts.Add(temp);
+					}else
+					{
+						/*for(int i = partsList.Count - 1; i >= 0; i--)
+
+						{
+							partsList.RemoveAt(i);
+						}*/
+					}
 
 					if (placeTurn)
 						lastTurnTag = prefab.tag;
@@ -136,5 +149,44 @@ public class standartLevelGeneration : MonoBehaviour
 		Gizmos.color = Color.red;
 		foreach (Bounds b in occupiedBounds)
 			Gizmos.DrawWireCube(b.center, b.size);
+	}
+	public void DestroyLvl()
+
+	{
+		continuePoint = transform;
+		for(int i = generatedParts.Count - 1; i >= 0; i--)
+
+		{
+			Destroy(generatedParts[i].gameObject);
+			generatedParts.RemoveAt(i);
+		}
+		for(int i = occupiedBounds.Count - 1; i >= 0; i--)
+
+		{
+			occupiedBounds.RemoveAt(i);
+		}
+		GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
+		GameObject[] brains = GameObject.FindGameObjectsWithTag(brainTag);
+		foreach(GameObject obj in enemies)
+
+		{
+			Destroy(obj);
+			if(obj == null)
+
+			{
+				
+				Debug.Log("no tag enemy");
+			}
+		}
+		foreach(GameObject obj in brains)
+
+		{
+			Destroy(obj);
+			if(obj == null)
+
+			{
+				Debug.Log("no tag brain");
+			}
+		}
 	}
 }
