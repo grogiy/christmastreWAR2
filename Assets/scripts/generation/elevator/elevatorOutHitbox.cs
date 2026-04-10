@@ -9,6 +9,7 @@ public class elevatorOutHitbox : MonoBehaviour
 	public Transform elevator;
 	public GameObject allElevator;
 	public elevatorMove elev;
+	bool close = false;
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
 	{
@@ -25,13 +26,14 @@ public class elevatorOutHitbox : MonoBehaviour
 	}
 	void OnTriggerEnter(Collider other)
 	{
-		if(other.CompareTag("Player"))
+		if(other.CompareTag("Player") && !close)
 		
 		{
 			animator.SetTrigger("close");
 			doorBox.isTrigger = false;
 			StartCoroutine(DectroyElevator());
 			Debug.Log("elevator is moving down");
+			close = true;
 		}
 	}
 	
