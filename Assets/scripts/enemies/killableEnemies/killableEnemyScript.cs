@@ -12,7 +12,8 @@ public class EnemyPatrol : MonoBehaviour
 	public Transform pointA;
 	public Transform pointB;
 	private Transform currentPoint;
-
+	float animSpeed = 0.3f;
+	bool stay = false;
 	public float speed = 10f;
 	public bool grounded;
 	public LayerMask whatIsGround;
@@ -30,14 +31,18 @@ public class EnemyPatrol : MonoBehaviour
 	public bool dead;
 	float posX;
 	float posZ;
+	float r;
 	public CapsuleCollider caps;
 	float airTime = 1;
 
 	void Start()
 	{
 		rb = GetComponent<Rigidbody>();
-		anim = GetComponent<Animator>();
+		if(GetComponent<Animator>() != null)
 
+		{
+			anim = GetComponent<Animator>();
+		}
 		currentPoint = pointB;
 		Player = GameObject.Find("player").transform;
 		plrMove = Player.GetComponent<playerMovement>();
@@ -49,6 +54,11 @@ public class EnemyPatrol : MonoBehaviour
 		grounded = Physics.Raycast(transform.position, Vector3.down,
 		playerHeight * 0.5f + 0.2f, whatIsGround);
 		plrDis = Vector3.Distance(transform.position, Player.position) <= 10f;
+		if(stay)
+		{
+			float Angles = Mathf.SmoothDampAngle(transform.eulerAngles.y, 180, ref r, animSpeed);
+			transform.rotation = Quaternion.Euler(transform.rotation.x, Angles, transform.rotation.z);
+		}
 		if(jump)
 			{
 				rb.position = new Vector3(posX, transform.position.y, posZ);
@@ -66,35 +76,45 @@ public class EnemyPatrol : MonoBehaviour
 					rb.linearVelocity = new Vector3(0f, jumpForce, 0f);	
 				}
 			}
-	if (!grounded) return;
-		
-		if(!plrDis)
+		if (!grounded) return;
 		{
-			orientation.LookAt(currentPoint.position);
-
-			Vector3 moveDir = orientation.forward * speed;
-			rb.linearVelocity = new Vector3(moveDir.x, rb.linearVelocity.y, moveDir.z);
-			
-
-			if (Vector3.Distance(transform.position, pointB.position) < 0.5f &&
-				currentPoint == pointB)
+			if(!plrDis)
 			{
-				currentPoint = pointA;
-			}
+				orientation.LookAt(currentPoint.position);
 
-			if (Vector3.Distance(transform.position, pointA.position) < 0.5f &&
-				currentPoint == pointA)
+				Vector3 moveDir = orientation.forward * speed;
+				rb.linearVelocity = new Vector3(moveDir.x, rb.linearVelocity.y, moveDir.z);
+				
+
+				if (Vector3.Distance(transform.position, pointB.position) < 0.5f &&
+					currentPoint == pointB)
+				{
+					speed = 0;
+					currentPoint = pointA;
+					StartCoroutine(stayOnPlace());
+					stay = true;
+				}
+
+				if (Vector3.Distance(transform.position, pointA.position) < 0.5f &&
+					currentPoint == pointA)
+				{
+					StartCoroutine(stayOnPlace());
+					stay = true;
+					speed = 0;
+					currentPoint = pointB;
+				}
+			}else
+
 			{
-				currentPoint = pointB;
+				if(!jump)
+				orientation.LookAt(Player.position);
+				Shoot();
 			}
-		}else
-
-		{
-			if(!jump)
-			orientation.LookAt(Player.position);
-			Shoot();
 		}
 	}
+		
+	
+	
 	private void Shoot()
 
 	{
@@ -108,7 +128,7 @@ public class EnemyPatrol : MonoBehaviour
 			gunCd = maxGunCd;
 		}
 	}
-	private void OnCollisionEnter(Collision other)
+	/*private void OnCollisionEnter(Collision other)
 	{
 		if(other.gameObject.CompareTag("Player") && plrMove.groundSlide && !jump && !dead)
 
@@ -123,5 +143,12 @@ public class EnemyPatrol : MonoBehaviour
 			Debug.Log("jump = " + jump);
 			caps.isTrigger = true;
 		}
+	}*/
+	IEnumerator stayOnPlace()
+
+	{
+		yield return new WaitForSeconds(5);
+		stay = false;
+		speed = 4;
 	}
 	}
